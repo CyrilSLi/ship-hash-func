@@ -38,4 +38,4 @@ for itemId in item_ids:
         while curr_price == price:
             curr_hour += 1
             curr_price = calculateRandomizedPrice(userId, itemId, curr_hour)
-        print(f"Item ID: {itemId}, Hour: {curr_hour}, Current Price: {curr_price}, Next Price: {price} ")
+        print(f"Item ID: {itemId}, Hour: {curr_hour}, Current Price: {curr_price}, Previous Price: {price} ")
