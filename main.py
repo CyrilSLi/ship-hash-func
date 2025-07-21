@@ -19,13 +19,13 @@ def createHourlyRandom(userId, itemId, hour):
         hash = hash % 2**31 # Equivalent of hash = hash & hash in JS
     return abs(hash) / 2147483647
 
-# minPercent = 90
+# minPercent = 100
 # maxPercent = 110
 # percentRange = maxPercent - minPercent
 currentHour = math.floor(time() / (60 * 60)) # Python timestamp is in seconds
 def calculateRandomizedPrice(userId, itemId, basePrice = base_price):
     random = createHourlyRandom(userId, itemId, currentHour)
-    priceMultiplier = (90 + (random * 20)) / 100
+    priceMultiplier = (100 + (random * 10)) / 100
     randomizedPrice = math.ceil(basePrice * priceMultiplier)
     return max(1, randomizedPrice)
 
@@ -38,6 +38,6 @@ for itemId in item_ids:
         prices.append(calculateRandomizedPrice(userId, itemId))
     print("max price:", max(prices), "min price:", min(prices), "avg price:", sum(prices) / len(prices))
     graph = []
-    for i in range(round(base_price * 0.9), round(base_price * 1.1), round(base_price * 0.01)):
-        graph.append(sum(1 for p in prices if p > i and p <= i + round(base_price * 0.01)) // (cycles // 200000))
+    for i in range(base_price, round(base_price * 1.1), round(base_price * 0.005)):
+        graph.append(sum(1 for p in prices if p > i and p <= i + round(base_price * 0.005)) // (cycles // 200000))
     print("Price graph:\n" + "\n".join("█" * (g - min(graph) + 2) for g in graph))
