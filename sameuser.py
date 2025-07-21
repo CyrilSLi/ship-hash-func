@@ -22,22 +22,20 @@ def createHourlyRandom(userId, itemId, hour):
 # minPercent = 100
 # maxPercent = 110
 # percentRange = maxPercent - minPercent
-currentHour = math.floor(time() / (60 * 60)) # Python timestamp is in seconds
-def calculateRandomizedPrice(userId, itemId, basePrice = base_price):
+def calculateRandomizedPrice(userId, itemId, currentHour, basePrice = base_price):
     random = createHourlyRandom(userId, itemId, currentHour)
     priceMultiplier = (100 + (random * 10)) / 100
     randomizedPrice = math.ceil(basePrice * priceMultiplier)
     return max(1, randomizedPrice)
 
-cycles = int(input("How many cycles to run? (default 1000000): ") or "1000000")
-print("Using base price", base_price)
+userId = gen_user_id()
 for itemId in item_ids:
+    curr_hour = 0
     prices = []
-    for _ in range(cycles):
-        userId = gen_user_id()
-        prices.append(calculateRandomizedPrice(userId, itemId))
-    print("max price:", max(prices), "min price:", min(prices), "avg price:", sum(prices) / len(prices))
-    graph = []
-    for i in range(base_price, round(base_price * 1.1), round(base_price * 0.005)):
-        graph.append(sum(1 for p in prices if p > i and p <= i + round(base_price * 0.005)) // max ((cycles // 200000), 1))
-    print("Price graph:\n" + "\n".join("█" * (g - min(graph) + 2) for g in graph))
+    while curr_hour < 1000000:
+        curr_price = calculateRandomizedPrice(userId, itemId, curr_hour)
+        price = curr_price
+        while curr_price == price:
+            curr_hour += 1
+            curr_price = calculateRandomizedPrice(userId, itemId, curr_hour)
+        print(f"Item ID: {itemId}, Hour: {curr_hour}, Current Price: {curr_price}, Next Price: {price} ")
